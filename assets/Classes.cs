@@ -8,63 +8,11 @@ using System.Windows.Controls;
 
 namespace VirtualRangeCard
 {
-    /*
-    class ArtillerySimple
-    {
-        public int[] charges { get; set; }
-        public Range_Table ranges { get; set; }
-        public Elevation_Table elev { get; set; }
-        public Elevation_d_Table elev_d { get; set; }
-        public Timer_Table timer { get; set; }
-        public Timer_d_Table timer_d { get; set; }
-
-        public class Range_Table
-        {
-            public int[] c0 { get; set; }
-            public int[] c1 { get; set; }
-            public int[] c2 { get; set; }
-            public int[] c3 { get; set; }
-            public int[] c4 { get; set; }
-        }
-
-        public class Elevation_Table
-        {
-            public int[] c0 { get; set; }
-            public int[] c1 { get; set; }
-            public int[] c2 { get; set; }
-            public int[] c3 { get; set; }
-            public int[] c4 { get; set; }
-        }
-
-        public class Elevation_d_Table
-        {
-            public int[] c0 { get; set; }
-            public int[] c1 { get; set; }
-            public int[] c2 { get; set; }
-            public int[] c3 { get; set; }
-            public int[] c4 { get; set; }
-        }
-
-        public class Timer_d_Table
-        {
-            public double[] c0 { get; set; }
-            public double[] c1 { get; set; }
-            public double[] c2 { get; set; }
-            public double[] c3 { get; set; }
-            public double[] c4 { get; set; }
-        }
-
-        public class Timer_Table
-        {
-            public double[] c0 { get; set; }
-            public double[] c1 { get; set; }
-            public double[] c2 { get; set; }
-            public double[] c3 { get; set; }
-            public double[] c4 { get; set; }
-        }
-    }
-    */
-
+    /// here we place all of the range card data from arma 3's ACE mod.
+    /// data here includes ranges, elevations, time to splash,
+    /// and the additional numbers to add to both of those depending on 
+    /// altitude difference per 100 meters
+    
     class M252
     {
         public static int charges = 4;
