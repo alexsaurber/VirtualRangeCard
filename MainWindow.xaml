@@ -6,9 +6,8 @@
         xmlns:local="clr-namespace:VirtualRangeCard"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Range Card v1.1.0" Height="auto" Width="200" SizeToContent="Height"
-        Icon="assets/mortar_ico96.png"
-        Topmost="True">
+        Title="Range Card - 1.1.2" Height="auto" Width="200" SizeToContent="Height"
+        Icon="assets/mortar_ico96.png">
 
 
     <Window.Resources>
@@ -209,7 +208,7 @@
                 </Grid>
 
                 <!-- Target Positional Data - Spotter + Target Bearing, Range, Altitude -->
-                <Grid x:Name="spottergrid_grid" Height="135" Grid.Row="4" Visibility="Visible">
+                <Grid x:Name="spottergrid_grid" Height="160" Grid.Row="4" Visibility="Visible">
 
                         <!-- set vis to collapsed for production -->
                     <Border Style="{StaticResource bodyborder}">
@@ -227,6 +226,7 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
                                 <RowDefinition Height="5"/>
                             </Grid.RowDefinitions>
 
@@ -239,16 +239,21 @@
 
                             <TextBlock Text="Grid N/S" Style="{StaticResource bodyfont}" Grid.Row="3" Grid.Column="1"/>
                             <TextBox x:Name="spottergridNS" Style="{StaticResource gridbox}" Grid.Row="3" Grid.Column="2"/>
-
-                            <TextBlock Text="Bearing" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
+                            
+                            <TextBlock Text="Height MSL" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
+                                <TextBox x:Name="spottergridASL" Style="{StaticResource gridbox}" />
+                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
+                            </StackPanel>
+
+                            <TextBlock Text="Bearing" Style="{StaticResource bodyfont}" Grid.Row="5" Grid.Column="1"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="2">
                                 <TextBox x:Name="targetBearing" Style="{StaticResource gridbox}" Grid.Column="2"/>
                                 <TextBlock Text="mils" Style="{StaticResource bodyfont}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
                             </StackPanel>
 
-                            <TextBlock Text="Range" Style="{StaticResource bodyfont}" Grid.Row="5" Grid.Column="1"/>
-
-                            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="2">
+                            <TextBlock Text="Range" Style="{StaticResource bodyfont}" Grid.Row="6" Grid.Column="1"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="2">
                                 <TextBox x:Name="targetRange" Style="{StaticResource gridbox}" />
                                 <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
                             </StackPanel>

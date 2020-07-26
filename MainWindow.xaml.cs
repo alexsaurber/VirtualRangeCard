@@ -71,36 +71,35 @@ namespace VirtualRangeCard
                 //{
 
                     // convert target input to 5 digit grid for each direciton (10 digit total grid read-out). 10 digit grids give 1 m X 1 m accuracy.
-                    while (targetgridWE.Text.Length < 5) { targetgridWE.Text += "0"; };
-                    while (targetgridNS.Text.Length < 5) { targetgridNS.Text += "0"; };
+                while (targetgridWE.Text.Length < 5) { targetgridWE.Text += "0"; };
+                while (targetgridNS.Text.Length < 5) { targetgridNS.Text += "0"; };
 
-                    // get our termination position turned into numbers
-                    if (Int32.TryParse(targetgridWE.Text, out int termX) && Int32.TryParse(targetgridNS.Text, out int termY) && Int32.TryParse(targetgridASL.Text, out int termASL))
-                    {
-                        // find distance in the X and Y from start to termination
-                        int deltaX = termX - startX;
-                        int deltaY = termY - startY;
+                // get our termination position turned into numbers
+                if (Int32.TryParse(targetgridWE.Text, out int termX) && Int32.TryParse(targetgridNS.Text, out int termY) && Int32.TryParse(targetgridASL.Text, out int termASL))
+                {
+                    // find distance in the X and Y from start to termination
+                    int deltaX = termX - startX;
+                    int deltaY = termY - startY;
 
-                        // find height difference between target and gun
-                        deltaHeight = termASL - startASL;
+                    // find height difference between target and gun
+                    deltaHeight = termASL - startASL;
 
-                        // get magnitude of range from gun to term so we can calculate elevation later
-                        range = Convert.ToInt32(Math.Sqrt(Math.Pow(Math.Abs(deltaX), 2) + Math.Pow(Math.Abs(deltaY), 2)));
-                        //MessageBox.Show(range.ToString());
+                    // get magnitude of LATERAL(!!!!!!!) range from gun to term so we can calculate elevation later
+                    range = Convert.ToInt32(Math.Sqrt(Math.Pow(Math.Abs(deltaX), 2) + Math.Pow(Math.Abs(deltaY), 2)));
 
-                        // find angle from start to term in (converted from radians to) degrees, then orient the mathematics to correct for North
-                        double angleXY = (Math.Atan2(Convert.ToDouble(deltaY), Convert.ToDouble(deltaX)) * (180 / Math.PI));
-                        double bearingXY = math2comp(angleXY);
+                    // find angle from start to term in (converted from radians to) degrees, then orient the mathematics to correct for North
+                    double angleXY = (Math.Atan2(Convert.ToDouble(deltaY), Convert.ToDouble(deltaX)) * (180 / Math.PI));
+                    double bearingXY = math2comp(angleXY);
 
-                        // convert target bearing from angle degrees to mils
-                        int AzimuthMILS = Convert.ToInt32(bearingXY / 360 * 6400);
-                        AzimuthMILS_str = AzimuthMILS.ToString();
-                        while (AzimuthMILS_str.Length < 4) { AzimuthMILS_str = "0" + AzimuthMILS_str; };
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid termination grid.");
-                    }
+                    // convert target bearing from angle degrees to mils
+                    int AzimuthMILS = Convert.ToInt32(bearingXY / 360 * 6400);
+                    AzimuthMILS_str = AzimuthMILS.ToString();
+                    while (AzimuthMILS_str.Length < 4) { AzimuthMILS_str = "0" + AzimuthMILS_str; };
+                }
+                else
+                {
+                    MessageBox.Show("Invalid termination grid.");
+                }
                 //}
                 // if we are given the spotter grid
                 /*else if (spottergrid.IsSelected == true)
@@ -152,7 +151,7 @@ namespace VirtualRangeCard
             }
 
 
-            if (range != -1 && deltaHeight != -1)
+            if (range != -1)
             {
                 // set range card values equal to 0 to initialize
                 int elev = 0;
@@ -289,14 +288,21 @@ namespace VirtualRangeCard
 
                     // get our spotter position and target reference turned into numbers - we are not concerned with target height while calculating azimuth
                     if (Int32.TryParse(spottergridWE.Text, out int spotX) && Int32.TryParse(spottergridNS.Text, out int spotY) && Int32.TryParse(targetBearing.Text, out int tgtBearing)
-                        && Int32.TryParse(targetRange.Text, out int tgtRange) && Int32.TryParse(targetgridASL.Text, out int termASL))
+                        && Int32.TryParse(targetRange.Text, out int tgtRange) && Int32.TryParse(targetgridASL.Text, out int termASL)
+                        && Int32.TryParse(spottergridASL.Text, out int spotASL))
                     {
                         // get grid location of termination point. convert bearing to radians, then calculate target position from spotter position
                         double tgtAbsAngle = comp2math(Convert.ToDouble(tgtBearing) * 360 / 6400);
 
-                        int termX = Convert.ToInt32(spotX + tgtRange * Math.Cos((tgtAbsAngle) / 180 * Math.PI)
+                        // calculate delta height
+                        int deltaASL = spotASL - termASL;
+
+                        // GET LATERAL RANGE - IMPORTANT!!!!!!!
+                        int lateralRange = Convert.ToInt32(Math.Sqrt((tgtRange * tgtRange) - (deltaASL * deltaASL)));
+
+                        int termX = Convert.ToInt32(spotX + lateralRange * Math.Cos((tgtAbsAngle) / 180 * Math.PI)
                             + latAdjust * Math.Cos((tgtAbsAngle - 90) / 180 * Math.PI) + vertAdjust * Math.Cos(tgtAbsAngle / 180 * Math.PI));
-                        int termY = Convert.ToInt32(spotY + tgtRange * Math.Sin((tgtAbsAngle) / 180 * Math.PI)
+                        int termY = Convert.ToInt32(spotY + lateralRange * Math.Sin((tgtAbsAngle) / 180 * Math.PI)
                             + latAdjust * Math.Sin((tgtAbsAngle - 90) / 180 * Math.PI) + vertAdjust * Math.Sin(tgtAbsAngle / 180 * Math.PI));
 
                         targetgridWE.Text = termX.ToString();
@@ -363,6 +369,7 @@ namespace VirtualRangeCard
 
             spottergridWE.Text = String.Empty;
             spottergridNS.Text = String.Empty;
+            spottergridASL.Text = String.Empty;
 
             targetBearing.Text = String.Empty;
             targetRange.Text = String.Empty;
@@ -370,6 +377,13 @@ namespace VirtualRangeCard
             targetgridWE.Text = String.Empty;
             targetgridNS.Text = String.Empty;
             targetgridASL.Text = String.Empty;
+
+            artyLeft.IsChecked = false;
+            artyRight.IsChecked = false;
+            artyUp.IsChecked = false;
+            artyDown.IsChecked = false;
+            adjustLRbox.Text = String.Empty;
+            adjustUDbox.Text = String.Empty;
 
             clearSolution();
         }
