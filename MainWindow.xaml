@@ -115,15 +115,13 @@
                     </TransformGroup>
                 </LinearGradientBrush.RelativeTransform>
                 <GradientStop Color="#FF261447" Offset="0"/>
-                <GradientStop Color="#FF052961" Offset="0.5"/>
+                <GradientStop Color="#FF1C5B72" Offset="0.5"/>
                 <GradientStop Color="#FF0D0221" Offset="1.0"/>
             </LinearGradientBrush>
         </Grid.Background>
         <DockPanel>
             <Grid DockPanel.Dock="Top">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="2"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="2"/>
                     <RowDefinition Height="auto"/>
@@ -207,62 +205,8 @@
                     </Border>
                 </Grid>
 
-                <!-- Target Positional Data - Spotter + Target Bearing, Range, Altitude -->
-                <Grid x:Name="spottergrid_grid" Height="160" Grid.Row="4" Visibility="Visible">
-
-                        <!-- set vis to collapsed for production -->
-                    <Border Style="{StaticResource bodyborder}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width=".80*"/>
-                                <ColumnDefinition Width="5"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="5"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="5"/>
-                            </Grid.RowDefinitions>
-
-                            <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}">
-                                <TextBlock Text="Observer Reference" Style="{StaticResource headerfont}"/>
-                            </Border>
-
-                            <TextBlock Text="Grid W/E" Style="{StaticResource bodyfont}" Grid.Row="2" Grid.Column="1"/>
-                            <TextBox x:Name="spottergridWE" Style="{StaticResource gridbox}" Grid.Row="2" Grid.Column="2"/>
-
-                            <TextBlock Text="Grid N/S" Style="{StaticResource bodyfont}" Grid.Row="3" Grid.Column="1"/>
-                            <TextBox x:Name="spottergridNS" Style="{StaticResource gridbox}" Grid.Row="3" Grid.Column="2"/>
-                            
-                            <TextBlock Text="Height MSL" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
-                                <TextBox x:Name="spottergridASL" Style="{StaticResource gridbox}" />
-                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
-                            </StackPanel>
-
-                            <TextBlock Text="Bearing" Style="{StaticResource bodyfont}" Grid.Row="5" Grid.Column="1"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="2">
-                                <TextBox x:Name="targetBearing" Style="{StaticResource gridbox}" Grid.Column="2"/>
-                                <TextBlock Text="mils" Style="{StaticResource bodyfont}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
-                            </StackPanel>
-
-                            <TextBlock Text="Range" Style="{StaticResource bodyfont}" Grid.Row="6" Grid.Column="1"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="2">
-                                <TextBox x:Name="targetRange" Style="{StaticResource gridbox}" />
-                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </Grid>
-
                 <!-- Positional data for the artillery section -->
-                <Grid x:Name="targetgrid_grid" Height="110" Grid.Row="6" Visibility="Visible">
+                <Grid x:Name="targetgrid_grid" Height="110" Grid.Row="4" Visibility="Visible">
                     <Border Style="{StaticResource bodyborder}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -281,7 +225,7 @@
                             </Grid.RowDefinitions>
 
                             <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}">
-                                <TextBlock Text="Target Position" Style="{StaticResource headerfont}"/>
+                                <TextBlock Text="Target Reference" Style="{StaticResource headerfont}"/>
                             </Border>
 
                             <TextBlock Text="Grid W/E" Style="{StaticResource bodyfont}" Grid.Row="2" Grid.Column="1"/>
@@ -299,7 +243,7 @@
                     </Border>
                 </Grid>
 
-                <Grid x:Name="buttongrid" Height="40" Grid.Row="8" Visibility="Visible">
+                <Grid x:Name="buttongrid" Height="40" Grid.Row="6" Visibility="Visible">
                     <Border Style="{StaticResource bodyborder}" >
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -322,7 +266,7 @@
                 </Grid>
 
                 <!-- adjust mortar fire grid -->
-                <Grid x:Name="adustgrid" Height="116" Grid.Row="10">
+                <Grid x:Name="adustgrid" Height="140" Grid.Row="8">
                     <Border Style="{StaticResource bodyborder}" BorderBrush="#FFFF3864">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -338,6 +282,8 @@
                                 <RowDefinition Height="5"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="5"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="5"/>
                             </Grid.RowDefinitions>
@@ -346,31 +292,37 @@
                                 <TextBlock Text="Adjustment" Style="{StaticResource headerfont}"/>
                             </Border>
                             
-                            <DockPanel Grid.Row="2" Grid.Column="1">
+                            <TextBlock Text="FO Bearing" Style="{StaticResource bodyfont}" Grid.Row="2" Grid.Column="1"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2">
+                                <TextBox x:Name="targetBearing" Style="{StaticResource gridbox}" Grid.Column="2" MaxLength="4"/>
+                                <TextBlock Text="mils" Style="{StaticResource bodyfont}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                            
+                            <DockPanel Grid.Row="4" Grid.Column="1">
                                 <RadioButton x:Name="artyLeft" Content="L" DockPanel.Dock="Left" Margin="15 0 0 0" Style="{StaticResource radiostyle}"/>
                                 <RadioButton x:Name="artyRight" Content="R" DockPanel.Dock="Right" Style="{StaticResource radiostyle}"/>
                             </DockPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2">
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
                                 <TextBox x:Name="adjustLRbox" Style="{StaticResource aslbox}"/>
                                 <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0"/>
                             </StackPanel>
 
-                            <DockPanel Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch">
-                                <RadioButton x:Name="artyUp" Content="U" DockPanel.Dock="Left" Margin="15 0 0 0" Style="{StaticResource radiostyle}"/>
+                            <DockPanel Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch">
+                                <RadioButton x:Name="artyUp" Content="A" DockPanel.Dock="Left" Margin="15 0 0 0" Style="{StaticResource radiostyle}"/>
                                 <RadioButton x:Name="artyDown" Content="D" DockPanel.Dock="Right" Style="{StaticResource radiostyle}"/>
                             </DockPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
+                            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="2">
                                 <TextBox x:Name="adjustUDbox" Style="{StaticResource aslbox}"/>
                                 <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0"/>
                             </StackPanel>
 
-                            <Button x:Name="adjustfirebutton" Content="ADJUST FIRE" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Height="26" Style="{StaticResource buttonstyle}" Click="adjustfirebutton_Click"/>
+                            <Button x:Name="adjustfirebutton" Content="ADJUST FIRE" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Height="26" Style="{StaticResource buttonstyle}" Click="adjustfirebutton_Click"/>
                         </Grid>
                     </Border>
                 </Grid>
                 
                 <!-- results for the calculations -->
-                <Grid x:Name="resultsgrid" Height="135" Grid.Row="12" Visibility="Visible">
+                <Grid x:Name="resultsgrid" Height="135" Grid.Row="10" Visibility="Visible">
                     <Border Style="{StaticResource bodyborder}" BorderBrush="#FFFF6C11">
                         <Grid>
                             <Grid.ColumnDefinitions>
