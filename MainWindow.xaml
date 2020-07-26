@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:VirtualRangeCard"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Virtual Range Card" Height="auto" Width="200" SizeToContent="Height"
-        Icon="assets/compass_ico96.png"
+        Title="Range Card v1.1.0" Height="auto" Width="200" SizeToContent="Height"
+        Icon="assets/mortar_ico96.png"
         Topmost="True">
 
 
@@ -53,7 +53,7 @@
         </Style>
         <Style x:Key="aslbox" TargetType="TextBox" BasedOn="{StaticResource bodybox}">
             <Setter Property="MaxLength" Value="4"/>
-            <Setter Property="Width" Value="40"/>
+            <Setter Property="Width" Value="50"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style x:Key="azelbox" TargetType="TextBox" BasedOn="{StaticResource bodybox}">
@@ -85,6 +85,16 @@
                 </Style>
             </Style.Resources>
         </Style>
+
+        <Style x:Key="radiostyle" TargetType="RadioButton">
+            <Setter Property="FontFamily" Value="Roboto"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="35"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        
     </Window.Resources>
     <Window.Background>
         <SolidColorBrush Color="White" Opacity="0"/>
@@ -97,14 +107,24 @@
         </Grid.RowDefinitions>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF37868D" Offset="0"/>
-                <GradientStop Color="#FF394D81" Offset="0.5"/>
-                <GradientStop Color="#FF382553" Offset="1"/>
+                <LinearGradientBrush.RelativeTransform>
+                    <TransformGroup>
+                        <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                        <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                        <RotateTransform Angle="-10" CenterY="0.5" CenterX="0.5"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </LinearGradientBrush.RelativeTransform>
+                <GradientStop Color="#FF261447" Offset="0"/>
+                <GradientStop Color="#FF052961" Offset="0.5"/>
+                <GradientStop Color="#FF0D0221" Offset="1.0"/>
             </LinearGradientBrush>
         </Grid.Background>
         <DockPanel>
             <Grid DockPanel.Dock="Top">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="2"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="2"/>
                     <RowDefinition Height="auto"/>
@@ -126,7 +146,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5"/>
                                 <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width=".75*"/>
+                                <ColumnDefinition Width=".80*"/>
                                 <ColumnDefinition Width="5"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -140,7 +160,7 @@
 
                             <ComboBox x:Name="guntypebox" Grid.Row="1" Grid.Column="2" Style="{StaticResource comboboxstyle}" SelectionChanged="guntypebox_SelectionChanged">
                                 <!-- ComboBoxItem Name="m109" Content="M109A6" Tag="155mm Shells"/-->
-                                <!-- ComboBoxItem Name="m119" Content="M119A3" Tag="105mm Shells"/-->
+                                <ComboBoxItem Name="m119" Content="M119A3" Tag="105mm Shells"/>
                                 <!-- ComboBoxItem Name="m142" Content="M142" Tag="227mm HIMARS"/-->
                                 <ComboBoxItem Name="m252" Content="M252" Tag="81mm Shells"/>
                                 <!-- ComboBoxItem Name="m270" Content="M270A1" Tag="227mm MRLS"/-->
@@ -157,7 +177,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5"/>
                                 <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width=".75*"/>
+                                <ColumnDefinition Width=".80*"/>
                                 <ColumnDefinition Width="5"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -170,7 +190,7 @@
                             </Grid.RowDefinitions>
 
                             <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}">
-                                <TextBlock Text="Gun Position" Style="{StaticResource headerfont}"/>
+                                <TextBlock Text="Gun Reference" Style="{StaticResource headerfont}"/>
                             </Border>
 
                             <TextBlock Text="Grid W/E" Style="{StaticResource bodyfont}" Grid.Row="2" Grid.Column="1"/>
@@ -179,153 +199,71 @@
                             <TextBlock Text="Grid N/S" Style="{StaticResource bodyfont}" Grid.Row="3" Grid.Column="1"/>
                             <TextBox x:Name="gungridNS" Style="{StaticResource gridbox}" Grid.Row="3" Grid.Column="2"/>
 
-                            <TextBlock Text="Height ASL" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
+                            <TextBlock Text="Height MSL" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
                                 <TextBox x:Name="gungridASL" Style="{StaticResource aslbox}"/>
-                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Width="auto" Margin="4 0 0 0"/>
+                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Width="auto" Margin="5 0 0 0"/>
                             </StackPanel>
                         </Grid>
                     </Border>
                 </Grid>
 
-                <!-- Positional reference about the target given by the spotter -->
-                <!--
-                <Grid Height="70" Grid.Row="4">
-                    <Border Style="{StaticResource bodyborder}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="5"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height=".75*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}">
-                                <TextBlock Text="Target Position Type" Style="{StaticResource headerfont}"/>
-                            </Border>
-                            <ComboBox x:Name="targetrefbox" Style="{StaticResource comboboxstyle}" Grid.Column="1" Grid.Row="1" SelectionChanged="targetrefbox_SelectionChanged">
-                                <ComboBoxItem x:Name="spottergrid" Content="Spotter + Target BRA"/>
-                                <ComboBoxItem x:Name="targetgrid" Content="Target Grid"/>
-                            </ComboBox>
-                        </Grid>
-                    </Border>
-                </Grid>
--->
-                <!-- Positional reference about the target given by the spotter -->
-                <Grid Height="70" Grid.Row="4">
-                    <Border Style="{StaticResource bodyborder}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="5"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height=".75*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}">
-                                <TextBlock Text="Target Position Type" Style="{StaticResource headerfont}"/>
-                            </Border>
-                            <ComboBox x:Name="targetrefbox" Style="{StaticResource comboboxstyle}" Grid.Column="1" Grid.Row="1" SelectionChanged="targetrefbox_SelectionChanged">
-                                <ComboBoxItem x:Name="spottergrid" Content="Spotter + Target BRA"/>
-                                <ComboBoxItem x:Name="targetgrid" Content="Target Grid"/>
-                            </ComboBox>
-                        </Grid>
-                    </Border>
-                </Grid>
-
                 <!-- Target Positional Data - Spotter + Target Bearing, Range, Altitude -->
-                <Grid x:Name="spottergrid_grid" Height="197" Grid.Row="6" Visibility="Collapsed">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="2"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                <Grid x:Name="spottergrid_grid" Height="135" Grid.Row="4" Visibility="Visible">
+
                         <!-- set vis to collapsed for production -->
-                        <Border Grid.Row="0" Style="{StaticResource bodyborder}" Height="86">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width=".75*"/>
-                                    <ColumnDefinition Width="5"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="5"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="5"/>
-                                </Grid.RowDefinitions>
+                    <Border Style="{StaticResource bodyborder}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width=".80*"/>
+                                <ColumnDefinition Width="5"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="5"/>
+                            </Grid.RowDefinitions>
 
-                                <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}">
-                                    <TextBlock Text="Spotter Position" Style="{StaticResource headerfont}"/>
-                                </Border>
+                            <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}">
+                                <TextBlock Text="Observer Reference" Style="{StaticResource headerfont}"/>
+                            </Border>
 
-                                <TextBlock Text="Grid W/E" Style="{StaticResource bodyfont}" Grid.Row="2" Grid.Column="1"/>
-                                <TextBox x:Name="spottergridWE" Style="{StaticResource gridbox}" Grid.Row="2" Grid.Column="2"/>
+                            <TextBlock Text="Grid W/E" Style="{StaticResource bodyfont}" Grid.Row="2" Grid.Column="1"/>
+                            <TextBox x:Name="spottergridWE" Style="{StaticResource gridbox}" Grid.Row="2" Grid.Column="2"/>
 
-                                <TextBlock Text="Grid N/S" Style="{StaticResource bodyfont}" Grid.Row="3" Grid.Column="1"/>
-                                <TextBox x:Name="spottergridNS" Style="{StaticResource gridbox}" Grid.Row="3" Grid.Column="2"/>
+                            <TextBlock Text="Grid N/S" Style="{StaticResource bodyfont}" Grid.Row="3" Grid.Column="1"/>
+                            <TextBox x:Name="spottergridNS" Style="{StaticResource gridbox}" Grid.Row="3" Grid.Column="2"/>
 
-                            </Grid>
-                        </Border>
+                            <TextBlock Text="Bearing" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
+                                <TextBox x:Name="targetBearing" Style="{StaticResource gridbox}" Grid.Column="2"/>
+                                <TextBlock Text="mils" Style="{StaticResource bodyfont}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
+                            </StackPanel>
 
-                        <Border Grid.Row="2" Style="{StaticResource bodyborder}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="5"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width=".75*"/>
-                                    <ColumnDefinition Width="5"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height=".15*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height=".15*"/>
-                                </Grid.RowDefinitions>
+                            <TextBlock Text="Range" Style="{StaticResource bodyfont}" Grid.Row="5" Grid.Column="1"/>
 
-                                <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}">
-                                    <TextBlock Text="Target BRA from Spotter" Style="{StaticResource headerfont}"/>
-                                </Border>
-
-                                <TextBlock Text="Bearing" Style="{StaticResource bodyfont}" Grid.Row="2" Grid.Column="1"/>
-                                <TextBox x:Name="targetBearing" Style="{StaticResource gridbox}" Grid.Row="2" Grid.Column="2"/>
-
-                                <TextBlock Text="Range" Style="{StaticResource bodyfont}" Grid.Row="3" Grid.Column="1"/>
-
-                                <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="2">
-                                    <TextBox x:Name="targetRange" Style="{StaticResource gridbox}" />
-                                    <TextBlock Text="m" Style="{StaticResource bodyfont}" Width="15" Margin="0" HorizontalAlignment="Left"/>
-                                </StackPanel>
-
-                                <TextBlock Text="Height ASL" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
-                                <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
-                                    <TextBox x:Name="targetASL" Style="{StaticResource aslbox}" Width="40"/>
-                                    <TextBlock Text="m" Style="{StaticResource bodyfont}" Width="20" Margin="5 0 0 0"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </Grid>
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="2">
+                                <TextBox x:Name="targetRange" Style="{StaticResource gridbox}" />
+                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
                 </Grid>
 
                 <!-- Positional data for the artillery section -->
-                <Grid x:Name="targetgrid_grid" Height="110" Grid.Row="6" Visibility="Collapsed">
+                <Grid x:Name="targetgrid_grid" Height="110" Grid.Row="6" Visibility="Visible">
                     <Border Style="{StaticResource bodyborder}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5"/>
                                 <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width=".75*"/>
+                                <ColumnDefinition Width=".80*"/>
                                 <ColumnDefinition Width="5"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -347,10 +285,10 @@
                             <TextBlock Text="Grid N/S" Style="{StaticResource bodyfont}" Grid.Row="3" Grid.Column="1"/>
                             <TextBox x:Name="targetgridNS" Style="{StaticResource gridbox}" Grid.Row="3" Grid.Column="2"/>
 
-                            <TextBlock Text="Height ASL" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
+                            <TextBlock Text="Height MSL" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
                                 <TextBox x:Name="targetgridASL" Style="{StaticResource aslbox}"/>
-                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Width="20" Margin="1 0 0 0"/>
+                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -363,7 +301,7 @@
                                 <ColumnDefinition Width="5"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width=".75*"/>
+                                <ColumnDefinition Width=".80*"/>
                                 <ColumnDefinition Width="5"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -378,13 +316,62 @@
                     </Border>
                 </Grid>
 
-                <Grid x:Name="resultsgrid" Height="135" Grid.Row="10" Visibility="Visible">
-                    <Border Style="{StaticResource bodyborder}" BorderBrush="Yellow">
+                <!-- adjust mortar fire grid -->
+                <Grid x:Name="adustgrid" Height="116" Grid.Row="10">
+                    <Border Style="{StaticResource bodyborder}" BorderBrush="#FFFF3864">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width=".80*"/>
+                                <ColumnDefinition Width="5"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="5"/>
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}" BorderBrush="#FFFF3864">
+                                <TextBlock Text="Adjustment" Style="{StaticResource headerfont}"/>
+                            </Border>
+                            
+                            <DockPanel Grid.Row="2" Grid.Column="1">
+                                <RadioButton x:Name="artyLeft" Content="L" DockPanel.Dock="Left" Margin="15 0 0 0" Style="{StaticResource radiostyle}"/>
+                                <RadioButton x:Name="artyRight" Content="R" DockPanel.Dock="Right" Style="{StaticResource radiostyle}"/>
+                            </DockPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2">
+                                <TextBox x:Name="adjustLRbox" Style="{StaticResource aslbox}"/>
+                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0"/>
+                            </StackPanel>
+
+                            <DockPanel Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch">
+                                <RadioButton x:Name="artyUp" Content="U" DockPanel.Dock="Left" Margin="15 0 0 0" Style="{StaticResource radiostyle}"/>
+                                <RadioButton x:Name="artyDown" Content="D" DockPanel.Dock="Right" Style="{StaticResource radiostyle}"/>
+                            </DockPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
+                                <TextBox x:Name="adjustUDbox" Style="{StaticResource aslbox}"/>
+                                <TextBlock Text="m" Style="{StaticResource bodyfont}" Margin="5 0 0 0"/>
+                            </StackPanel>
+
+                            <Button x:Name="adjustfirebutton" Content="ADJUST FIRE" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Height="26" Style="{StaticResource buttonstyle}" Click="adjustfirebutton_Click"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+                
+                <!-- results for the calculations -->
+                <Grid x:Name="resultsgrid" Height="135" Grid.Row="12" Visibility="Visible">
+                    <Border Style="{StaticResource bodyborder}" BorderBrush="#FFFF6C11">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5"/>
                                 <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width=".75*"/>
+                                <ColumnDefinition Width=".80*"/>
                                 <ColumnDefinition Width="5"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -397,7 +384,7 @@
                                 <RowDefinition Height=".15*"/>
                             </Grid.RowDefinitions>
 
-                            <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}" BorderBrush="Yellow">
+                            <Border Grid.ColumnSpan="4" Style="{StaticResource headerborder}" BorderBrush="#FFFF6C11">
                                 <TextBlock Text="Artillery Solution" Style="{StaticResource headerfont}"/>
                             </Border>
 
@@ -412,7 +399,7 @@
 
                             <TextBlock Text="Elevation" Style="{StaticResource bodyfont}" Grid.Row="4" Grid.Column="1"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="2">
-                                <TextBox x:Name="solutionElevation" Style="{StaticResource aslbox}"/>
+                                <TextBox x:Name="solutionElevation" Style="{StaticResource aslbox}" Width="40"/>
                                 <TextBlock Text="mils" Style="{StaticResource bodyfont}" Width="auto" Margin="4 0 0 0"/>
                             </StackPanel>
 
@@ -424,6 +411,8 @@
                         </Grid>
                     </Border>
                 </Grid>
+
+
             </Grid>
         </DockPanel>
     </Grid>

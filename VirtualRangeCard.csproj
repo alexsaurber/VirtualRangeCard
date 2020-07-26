@@ -4,15 +4,22 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>assets\compass_ico96.ico</ApplicationIcon>
+    <ApplicationIcon>assets/mortar_ico96.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="assets\compass_ico96.png" />
+    <None Remove="assets\mortar_ico96.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="assets\compass_ico96.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="assets\mortar_ico96.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

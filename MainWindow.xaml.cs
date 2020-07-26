@@ -27,38 +27,25 @@ namespace VirtualRangeCard
             else { comboxtext.Text = String.Empty; }
         }
 
-        private void targetrefbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (targetrefbox.SelectedIndex != -1)
-            {
-                if (spottergrid.IsSelected == true)
-                {
-                    targetgrid_grid.Visibility = Visibility.Collapsed;
-                    spottergrid_grid.Visibility = Visibility.Visible;
-                }
-                else if (targetgrid.IsSelected == true)
-                {
-                    spottergrid_grid.Visibility = Visibility.Collapsed;
-                    targetgrid_grid.Visibility = Visibility.Visible;
-
-                }
-            }
-            else
-            {
-                spottergrid_grid.Visibility = Visibility.Collapsed;
-                targetgrid_grid.Visibility = Visibility.Collapsed;
-            }
-        }
-
         private void calculatebutton_Click(object sender, RoutedEventArgs e)
         {
-            clearSolution();
             string[] firingSolution = findArtillerySolution();
             solutionCharge.Text = firingSolution[0];
             solutionAzimuth.Text = firingSolution[1];
             solutionElevation.Text = firingSolution[2];
             solutionTime.Text = firingSolution[3];
         }
+
+        private void adjustfirebutton_Click(object sender, RoutedEventArgs e)
+        {
+            string[] firingSolution = adjustArtillerySolution();
+            solutionCharge.Text = firingSolution[0];
+            solutionAzimuth.Text = firingSolution[1];
+            solutionElevation.Text = firingSolution[2];
+            solutionTime.Text = firingSolution[3];
+        }
+
+        
 
         private string[] findArtillerySolution()
         {
@@ -80,8 +67,8 @@ namespace VirtualRangeCard
             if (Int32.TryParse(gungridWE.Text, out int startX) && Int32.TryParse(gungridNS.Text, out int startY) && Int32.TryParse(gungridASL.Text, out int startASL))
             {
                 // if we are given the target grid
-                if (targetgrid.IsSelected == true)
-                {
+                //if (targetgrid.IsSelected == true)
+                //{
 
                     // convert target input to 5 digit grid for each direciton (10 digit total grid read-out). 10 digit grids give 1 m X 1 m accuracy.
                     while (targetgridWE.Text.Length < 5) { targetgridWE.Text += "0"; };
@@ -114,9 +101,9 @@ namespace VirtualRangeCard
                     {
                         MessageBox.Show("Invalid termination grid.");
                     }
-                }
+                //}
                 // if we are given the spotter grid
-                else if (spottergrid.IsSelected == true)
+                /*else if (spottergrid.IsSelected == true)
                 {
                     // convert target input to 5 digit grid for each direciton (10 digit total grid read-out)
                     while (spottergridWE.Text.Length < 5) { spottergridWE.Text += "0"; };
@@ -157,7 +144,7 @@ namespace VirtualRangeCard
                     {
                         MessageBox.Show("Invalid spotter grid or target BRA.");
                     }
-                }
+                }*/
             }
             else
             {
@@ -248,8 +235,97 @@ namespace VirtualRangeCard
                 Charge_str = requiredCharge.ToString();
             }
 
+            clearSolution();
             string[] solution = new string[4] { Charge_str, AzimuthMILS_str, Elevation_str, FlightTime_str };
             return solution;
+        }
+        
+        private string[] adjustArtillerySolution()
+        {
+            string[] currentsolution = new string[4] { solutionCharge.Text, solutionAzimuth.Text, solutionElevation.Text, solutionTime.Text };
+            if (artyLeft.IsChecked == true || artyRight.IsChecked == true || artyUp.IsChecked == true || artyDown.IsChecked == true)
+            {
+                int latAdjust = 0;
+                int vertAdjust = 0;
+                if (artyLeft.IsChecked == true || artyRight.IsChecked == true)
+                {
+                    if (Int32.TryParse(adjustLRbox.Text, out latAdjust))
+                    {
+                        if (artyLeft.IsChecked == true)
+                        {
+                            latAdjust = -1 * latAdjust;
+                        }
+                    }
+                    else { adjustLRbox.Text = "0"; }
+                }
+
+                if (artyUp.IsChecked == true || artyDown.IsChecked == true)
+                {
+                    if (Int32.TryParse(adjustUDbox.Text, out vertAdjust))
+                    {
+                        if (artyDown.IsChecked == true)
+                        {
+                            vertAdjust = -1 * vertAdjust;
+                        }
+                    }
+                    else { adjustUDbox.Text = "0"; }
+                }
+
+                if (latAdjust == 0 && vertAdjust == 0)
+                {
+                    return currentsolution;
+                }
+
+                // convert gun input to 5 digit grid for each direciton (10 digit total grid read-out)
+                while (gungridWE.Text.Length < 5) { gungridWE.Text += "0"; };
+                while (gungridNS.Text.Length < 5) { gungridNS.Text += "0"; };
+
+                // get our starting position turned into numbers
+                if (Int32.TryParse(gungridWE.Text, out int startX) && Int32.TryParse(gungridNS.Text, out int startY) && Int32.TryParse(gungridASL.Text, out int startASL))
+                {
+                    // convert target input to 5 digit grid for each direciton (10 digit total grid read-out)
+                    while (spottergridWE.Text.Length < 5) { spottergridWE.Text += "0"; };
+                    while (spottergridNS.Text.Length < 5) { spottergridNS.Text += "0"; };
+
+                    // get our spotter position and target reference turned into numbers - we are not concerned with target height while calculating azimuth
+                    if (Int32.TryParse(spottergridWE.Text, out int spotX) && Int32.TryParse(spottergridNS.Text, out int spotY) && Int32.TryParse(targetBearing.Text, out int tgtBearing)
+                        && Int32.TryParse(targetRange.Text, out int tgtRange) && Int32.TryParse(targetgridASL.Text, out int termASL))
+                    {
+                        // get grid location of termination point. convert bearing to radians, then calculate target position from spotter position
+                        double tgtAbsAngle = comp2math(Convert.ToDouble(tgtBearing) * 360 / 6400);
+
+                        int termX = Convert.ToInt32(spotX + tgtRange * Math.Cos((tgtAbsAngle) / 180 * Math.PI)
+                            + latAdjust * Math.Cos((tgtAbsAngle - 90) / 180 * Math.PI) + vertAdjust * Math.Cos(tgtAbsAngle / 180 * Math.PI));
+                        int termY = Convert.ToInt32(spotY + tgtRange * Math.Sin((tgtAbsAngle) / 180 * Math.PI)
+                            + latAdjust * Math.Sin((tgtAbsAngle - 90) / 180 * Math.PI) + vertAdjust * Math.Sin(tgtAbsAngle / 180 * Math.PI));
+
+                        targetgridWE.Text = termX.ToString();
+                        targetgridNS.Text = termY.ToString();
+
+                        while (targetgridWE.Text.Length < 5) { targetgridWE.Text = "0" + targetgridWE.Text; };
+                        while (targetgridNS.Text.Length < 5) { targetgridNS.Text = "0" + targetgridNS.Text; };
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid spotter grid or target reference.");
+                    }
+
+                    artyLeft.IsChecked = false;
+                    artyRight.IsChecked = false;
+                    artyUp.IsChecked = false;
+                    artyDown.IsChecked = false;
+                    adjustLRbox.Text = String.Empty;
+                    adjustUDbox.Text = String.Empty;
+
+                    //clearSolution();
+                    //string[] solution = new string[4] { Charge_str, AzimuthMILS_str, Elevation_str, FlightTime_str };
+                    return findArtillerySolution();
+                }
+            }
+
+            // make no changes if any errors occur such as missing numbers, bad grid, etc
+            return currentsolution;
         }
 
         // set up a function we can use to get the exact value on a line between two points if we have the X value for a third
@@ -285,14 +361,11 @@ namespace VirtualRangeCard
             gungridNS.Text = String.Empty;
             gungridASL.Text = String.Empty;
 
-            targetrefbox.SelectedIndex = -1;
-
             spottergridWE.Text = String.Empty;
             spottergridNS.Text = String.Empty;
 
             targetBearing.Text = String.Empty;
             targetRange.Text = String.Empty;
-            targetASL.Text = String.Empty;
 
             targetgridWE.Text = String.Empty;
             targetgridNS.Text = String.Empty;
@@ -308,6 +381,5 @@ namespace VirtualRangeCard
             solutionElevation.Text = String.Empty;
             solutionTime.Text = String.Empty;
         }
-
     }
 }
