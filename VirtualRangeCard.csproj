@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>assets/mortar_ico96.ico</ApplicationIcon>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

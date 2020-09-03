@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 
 namespace VirtualRangeCard
 {
@@ -27,20 +28,44 @@ namespace VirtualRangeCard
 
         private void calculatebutton_Click(object sender, RoutedEventArgs e)
         {
-            string[] firingSolution = findArtillerySolution();
-            solutionCharge.Text = firingSolution[0];
-            solutionAzimuth.Text = firingSolution[1];
-            solutionElevation.Text = firingSolution[2];
-            solutionTime.Text = firingSolution[3];
+            if ((guntypebox.SelectedItem == m119_H) || (guntypebox.SelectedItem == m119_L) || (guntypebox.SelectedItem == m252))
+            {
+                string[] firingSolution = findArtillerySolution();
+                if ((firingSolution[0] == "0") && (firingSolution[2] == "0") && (firingSolution[3] == "0"))
+                {
+                    solutionCharge.Text = "X";
+                    solutionAzimuth.Text = "X";
+                    solutionElevation.Text = "X";
+                    solutionTime.Text = "X";
+                }
+                else
+                {
+                    solutionCharge.Text = firingSolution[0];
+                    solutionAzimuth.Text = firingSolution[1];
+                    solutionElevation.Text = firingSolution[2];
+                    solutionTime.Text = firingSolution[3];
+                }
+            }
+            else { MessageBox.Show("Select a gun"); }
         }
 
         private void adjustfirebutton_Click(object sender, RoutedEventArgs e)
         {
             string[] firingSolution = adjustArtillerySolution();
-            solutionCharge.Text = firingSolution[0];
-            solutionAzimuth.Text = firingSolution[1];
-            solutionElevation.Text = firingSolution[2];
-            solutionTime.Text = firingSolution[3];
+            if ((firingSolution[0] == "0") && (firingSolution[2] == "0") && (firingSolution[3] == "0"))
+            {
+                solutionCharge.Text = "X";
+                solutionAzimuth.Text = "X";
+                solutionElevation.Text = "X";
+                solutionTime.Text = "X";
+            }
+            else
+            {
+                solutionCharge.Text = firingSolution[0];
+                solutionAzimuth.Text = firingSolution[1];
+                solutionElevation.Text = firingSolution[2];
+                solutionTime.Text = firingSolution[3];
+            }
         }
 
         
@@ -117,46 +142,49 @@ namespace VirtualRangeCard
                 // set a var to break the outer for loop
                 bool canbreakloops = false;
 
+                // make afunction return the correct type
+                dynamic ActiveGun = getActiveGun();
+                //MessageBox.Show(ToString(ActiveGun.nameStr));
                 // iterate through all of the ranges and find the charge that gets us to the range
-                for (int charge = 0; charge < M252.ranges.Length; charge++)
+                for (int charge = 0; charge < ActiveGun.ranges.Length; charge++)
                 {
-                    for (int rangeInd = 0; rangeInd < M252.ranges[charge].Length; rangeInd++)
+                    for (int rangeInd = 0; rangeInd < ActiveGun.ranges[charge].Length; rangeInd++)
                     {
                         // if the range number is an actual number in the chart
-                        if (M252.ranges[charge][rangeInd] == range)
+                        if (ActiveGun.ranges[charge][rangeInd] == range)
                         {
-                            elev = M252.elev[charge][rangeInd];
-                            elev_d = M252.elev_d[charge][rangeInd];
-                            timer = M252.timer[charge][rangeInd];
-                            timer_d = M252.timer_d[charge][rangeInd];
+                            elev = ActiveGun.elev[charge][rangeInd];
+                            elev_d = ActiveGun.elev_d[charge][rangeInd];
+                            timer = ActiveGun.timer[charge][rangeInd];
+                            timer_d = ActiveGun.timer_d[charge][rangeInd];
                             requiredCharge = charge;
 
                             canbreakloops = true;
                             break;
                         }
-                        else if (rangeInd + 1 <= M252.ranges[charge].Length - 1)
+                        else if (rangeInd + 1 <= ActiveGun.ranges[charge].Length - 1)
                         {
                             // if our range is above the current indexed range and below the next, we found our bounds
-                            if (range > M252.ranges[charge][rangeInd] && range < M252.ranges[charge][rangeInd + 1])
+                            if (range > ActiveGun.ranges[charge][rangeInd] && range < ActiveGun.ranges[charge][rangeInd + 1])
                             {
                                 // we need to know our bounds so we can use linear interpolation to get the exact value we are supposed to have
-                                int range_low = M252.ranges[charge][rangeInd];
-                                int range_high = M252.ranges[charge][rangeInd + 1];
+                                int range_low = ActiveGun.ranges[charge][rangeInd];
+                                int range_high = ActiveGun.ranges[charge][rangeInd + 1];
 
-                                int elev_low = M252.elev[charge][rangeInd];
-                                int elev_high = M252.elev[charge][rangeInd + 1];
+                                int elev_low = ActiveGun.elev[charge][rangeInd];
+                                int elev_high = ActiveGun.elev[charge][rangeInd + 1];
                                 elev = Convert.ToInt32(linint(range_low, range_high, elev_low, elev_high, range));
 
-                                int elev_d_low = M252.elev_d[charge][rangeInd];
-                                int elev_d_high = M252.elev_d[charge][rangeInd + 1];
+                                int elev_d_low = ActiveGun.elev_d[charge][rangeInd];
+                                int elev_d_high = ActiveGun.elev_d[charge][rangeInd + 1];
                                 elev_d = Convert.ToInt32(linint(range_low, range_high, elev_d_low, elev_d_high, range));
 
-                                double timer_low = M252.timer[charge][rangeInd];
-                                double timer_high = M252.timer[charge][rangeInd + 1];
+                                double timer_low = ActiveGun.timer[charge][rangeInd];
+                                double timer_high = ActiveGun.timer[charge][rangeInd + 1];
                                 timer = linint(range_low, range_high, timer_low, timer_high, range);
 
-                                double timer_d_low = M252.timer_d[charge][rangeInd];
-                                double timer_d_high = M252.timer_d[charge][rangeInd + 1];
+                                double timer_d_low = ActiveGun.timer_d[charge][rangeInd];
+                                double timer_d_high = ActiveGun.timer_d[charge][rangeInd + 1];
                                 timer_d = linint(range_low, range_high, timer_d_low, timer_d_high, range);
 
                                 requiredCharge = charge;
@@ -191,6 +219,26 @@ namespace VirtualRangeCard
             clearSolution();
             string[] solution = new string[4] { Charge_str, AzimuthMILS_str, Elevation_str, FlightTime_str };
             return solution;
+        }
+        
+
+
+        private Object getActiveGun()
+        {
+            
+            if (guntypebox.SelectedItem == m252)
+            {
+                return Activator.CreateInstance<M252>();
+            }
+            else if (guntypebox.SelectedItem == m119_H)
+            {
+                return Activator.CreateInstance<M119A2_high>();
+            }
+            else if (guntypebox.SelectedItem == m119_L)
+            {
+                return Activator.CreateInstance<M119A2_low>();
+            }
+            else { return Activator.CreateInstance<Gun>(); }
         }
         
         private string[] adjustArtillerySolution()
