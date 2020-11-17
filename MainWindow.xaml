@@ -160,7 +160,8 @@
                                 <ComboBoxItem Name="m119_H" Content="M119A2_H" Tag="105mm Shells"/>
                                 <ComboBoxItem Name="m119_L" Content="M119A2_L" Tag="105mm Shells"/>
                                 <!-- ComboBoxItem Name="m142" Content="M142" Tag="227mm HIMARS"/-->
-                                <ComboBoxItem Name="m252" Content="M252" Tag="81mm Shells"/>
+                                <ComboBoxItem Name="m252" Content="M252" Tag="81mm Rounds"/>
+                                <ComboBoxItem Name="m224" Content="M224" Tag="60mm Rounds"/>
                                 <!-- ComboBoxItem Name="m270" Content="M270A1" Tag="227mm MRLS"/-->
                             </ComboBox>
                             <TextBlock x:Name="comboxtext" Text="" Grid.Column="1" Grid.Row="1" Style="{StaticResource bodyfont}"/>

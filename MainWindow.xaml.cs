@@ -28,7 +28,7 @@ namespace VirtualRangeCard
 
         private void calculatebutton_Click(object sender, RoutedEventArgs e)
         {
-            if ((guntypebox.SelectedItem == m119_H) || (guntypebox.SelectedItem == m119_L) || (guntypebox.SelectedItem == m252))
+            if ((guntypebox.SelectedItem == m119_H) || (guntypebox.SelectedItem == m119_L) || (guntypebox.SelectedItem == m252) || (guntypebox.SelectedItem == m224))
             {
                 string[] firingSolution = findArtillerySolution();
                 if ((firingSolution[0] == "0") && (firingSolution[2] == "0") && (firingSolution[3] == "0"))
@@ -229,6 +229,10 @@ namespace VirtualRangeCard
             if (guntypebox.SelectedItem == m252)
             {
                 return Activator.CreateInstance<M252>();
+            }
+            else if (guntypebox.SelectedItem == m224)
+            {
+                return Activator.CreateInstance<M224>();
             }
             else if (guntypebox.SelectedItem == m119_H)
             {
