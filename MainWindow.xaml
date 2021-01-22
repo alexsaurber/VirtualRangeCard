@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VirtualRangeCard"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Range Card - 1.3.1" Height="auto" Width="200" SizeToContent="Height"
+        Title="Range Card - 1.3.2" Height="auto" Width="200" SizeToContent="Height"
         Icon="assets/mortar_ico96.png">
 
 
