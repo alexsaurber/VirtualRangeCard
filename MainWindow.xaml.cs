@@ -37,6 +37,8 @@ namespace VirtualRangeCard
                     solutionAzimuth.Text = "X";
                     solutionElevation.Text = "X";
                     solutionTime.Text = "X";
+                    solutionRange.Text = "X";
+                    solutionBearing.Text = "X";
                 }
                 else
                 {
@@ -44,6 +46,8 @@ namespace VirtualRangeCard
                     solutionAzimuth.Text = firingSolution[1];
                     solutionElevation.Text = firingSolution[2];
                     solutionTime.Text = firingSolution[3];
+                    solutionRange.Text = firingSolution[4];
+                    solutionBearing.Text = firingSolution[5];
                 }
             }
             else { MessageBox.Show("Select a gun"); }
@@ -58,6 +62,8 @@ namespace VirtualRangeCard
                 solutionAzimuth.Text = "X";
                 solutionElevation.Text = "X";
                 solutionTime.Text = "X";
+                solutionRange.Text = "X";
+                solutionBearing.Text = "X";
             }
             else
             {
@@ -65,6 +71,8 @@ namespace VirtualRangeCard
                 solutionAzimuth.Text = firingSolution[1];
                 solutionElevation.Text = firingSolution[2];
                 solutionTime.Text = firingSolution[3];
+                solutionRange.Text = firingSolution[4];
+                solutionBearing.Text = firingSolution[5];
             }
         }
 
@@ -77,6 +85,8 @@ namespace VirtualRangeCard
             string Charge_str = String.Empty;
             string Elevation_str = String.Empty;
             string FlightTime_str = String.Empty;
+            string Range_str = String.Empty;
+            string Bearing_str = String.Empty;
 
             // get the range to the target to calculate elevation. initially set to -1 so we can error check later
             int range = -1;
@@ -109,6 +119,7 @@ namespace VirtualRangeCard
 
                     // get magnitude of LATERAL(!!!!!!!) range from gun to term so we can calculate elevation later
                     range = Convert.ToInt32(Math.Sqrt(Math.Pow(Math.Abs(deltaX), 2) + Math.Pow(Math.Abs(deltaY), 2)));
+                    Range_str = range.ToString();
 
                     // find angle from start to term in (converted from radians to) degrees, then orient the mathematics to correct for North
                     double angleXY = (Math.Atan2(Convert.ToDouble(deltaY), Convert.ToDouble(deltaX)) * (180 / Math.PI));
@@ -117,6 +128,8 @@ namespace VirtualRangeCard
                     // convert target bearing from angle degrees to mils
                     int AzimuthMILS = Convert.ToInt32(bearingXY / 360 * 6400);
                     AzimuthMILS_str = AzimuthMILS.ToString();
+                    Bearing_str = bearingXY.ToString();
+
                     while (AzimuthMILS_str.Length < 4) { AzimuthMILS_str = "0" + AzimuthMILS_str; };
                 }
                 else
@@ -217,7 +230,7 @@ namespace VirtualRangeCard
             }
 
             clearSolution();
-            string[] solution = new string[4] { Charge_str, AzimuthMILS_str, Elevation_str, FlightTime_str };
+            string[] solution = new string[6] { Charge_str, AzimuthMILS_str, Elevation_str, FlightTime_str, Range_str, Bearing_str };
             return solution;
         }
         
@@ -384,6 +397,8 @@ namespace VirtualRangeCard
             solutionAzimuth.Text = String.Empty;
             solutionElevation.Text = String.Empty;
             solutionTime.Text = String.Empty;
+            solutionRange.Text = String.Empty;
+            solutionBearing.Text = String.Empty;
         }
     }
 }
